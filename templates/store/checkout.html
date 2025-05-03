@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout | MyShop</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        form {
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%;
+            margin-top: 30px;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: green;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            margin-top: 30px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: darkgreen;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Checkout</h1>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <h2>Shipping Address</h2>
+
+    <label for="country">Country:</label>
+    <input type="text" name="country" id="country" required>
+
+    <label for="state">State:</label>
+    <input type="text" name="state" id="state" required>
+
+    <label for="city">City:</label>
+    <input type="text" name="city" id="city" required>
+
+    <label for="pincode">Pincode:</label>
+    <input type="text" name="pincode" id="pincode" required>
+
+    <label for="address_line">Full Address:</label>
+    <textarea name="address_line" id="address_line" rows="3" required></textarea>
+
+    <h2>Payment Method</h2>
+
+    <label for="payment_method">Choose Payment Method:</label>
+    <select name="payment_method" id="payment_method" required>
+        <option value="COD">Cash on Delivery</option>
+        <option value="Online">Online Payment</option>
+    </select>
+
+    <h2>Order Summary</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price (₹)</th>
+                <th>Quantity</th>
+                <th>Subtotal (₹)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart_items %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.product.price }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.subtotal }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>Total: ₹{{ total }}</h3>
+
+    <button type="submit">Place Order</button>
+</form>
+
+</body>
+</html>

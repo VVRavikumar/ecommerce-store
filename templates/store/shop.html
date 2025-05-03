@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shop</title>
+    <style>
+        body {
+            font-family: Arial;
+        }
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 10px;
+            width: 250px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+        }
+        .card h3 {
+            margin: 10px 0;
+        }
+        .card p {
+            color: green;
+            font-weight: bold;
+        }
+        .card form {
+            margin-top: 10px;
+        }
+        .card input[type="number"] {
+            width: 60px;
+            padding: 5px;
+            margin-right: 5px;
+        }
+        .card button {
+            background: #28a745;
+            border: none;
+            padding: 8px 12px;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h1 style="text-align: center;">All Products</h1>
+
+<div class="products">
+    {% for product in products %}
+    <div class="card">
+        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        <h3>{{ product.name }}</h3>
+        <p>₹{{ product.price }}</p>
+
+        <form method="POST" action="{% url 'add-to-cart' %}">
+            {% csrf_token %}
+            <input type="hidden" name="product_id" value="{{ product.id }}">
+            <input type="number" name="quantity" value="1" min="1">
+            <button type="submit">Add to Cart</button>
+        </form>
+
+    </div>
+    {% endfor %}
+</div>
+
+</body>
+</html>

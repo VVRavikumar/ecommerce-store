@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shopping Cart</title>
+    <style>
+        body { font-family: Arial; max-width: 900px; margin: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 30px; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: center; }
+        th { background-color: #f4f4f4; }
+        .total { text-align: right; margin-top: 20px; }
+        .checkout-btn { padding: 10px 20px; background: green; color: white; text-decoration: none; border-radius: 5px; }
+        .AddMore-btn { padding: 10px 20px;margin-top:50px; background: blue; color: white; text-decoration: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>My Cart</h1>
+
+    {% if cart_items %}
+    <table>
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Subtotal</th>
+            <th>Action</th>
+        </tr>
+        {% for item in cart_items %}
+        <tr>
+            <td>{{ item.product.name }}</td>
+            <td>₹{{ item.product.price }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>₹{{ item.subtotal }}</td>
+            <td>
+                <form method="post" action="{% url 'remove-from-cart' item.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Remove</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+     
+    <div class="total">
+        <h3>Total: ₹{{ total }}</h3>
+        <a href="{% url 'shop' %}" class="AddMore-btn">Add More Items</a>
+        <a href="{% url 'checkout' %}" class="checkout-btn">Proceed to Checkout</a>
+    </div>
+   
+    {% else %}
+        <p>Your cart is empty.</p>
+    {% endif %}
+</body>
+</html>

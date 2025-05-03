@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <title>Shop</title>
+    <style>
+        body { font-family: Arial; }
+        .products { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+        .card { width: 220px; padding: 10px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 2px 2px 6px #ddd; text-align: center; }
+        .card img { width: 100%; height: 180px; object-fit: cover; border-radius: 10px; }
+        .pagination { margin: 20px; text-align: center; }
+    </style>
+</head>
+<body>
+    <h1 style="text-align:center;">Product Catalog</h1>
+
+    <form method="get" style="text-align:center; margin-bottom: 20px;">
+        <input type="text" name="q" placeholder="Search products" value="{{ request.GET.q }}">
+        <input type="number" name="min_price" placeholder="Min price" value="{{ request.GET.min_price }}">
+        <input type="number" name="max_price" placeholder="Max price" value="{{ request.GET.max_price }}">
+        <button type="submit">Filter</button>
+    </form>
+
+    <div class="products">
+        {% for product in products %}
+        <div class="card">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            <h3><a href="{% url 'product-detail' product.id %}">View Details</a></h3>
+            <p>₹{{ product.price }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">&laquo; Prev</a>
+        {% endif %}
+
+        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Next &raquo;</a>
+        {% endif %}
+    </div>
+</body>
+</html>
