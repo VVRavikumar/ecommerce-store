@@ -19,6 +19,7 @@ from django.views import View
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 
+
 # Create your views here.
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -278,3 +279,43 @@ class OrderSuccessView(View):
     def get(self, request):
         return render(request, 'store/order_success.html')
 
+class SignUpView(View):
+    def get(self, request):
+        return render(request, 'store/signup.html')
+
+    def post(self, request):
+        username = request.POST['username']
+        password = request.POST['password']
+
+        if User.objects.filter(username=username).exists():
+            return render(request, 'store/signup.html', {'error': 'Username already exists!'})
+
+        user = User.objects.create_user(username=username)
+        user.set_password(password)
+        user.save()
+        messages.success(request, "Account created! Please log in.")
+        return redirect('login')
+
+
+class LoginView(View):
+    def get(self, request):
+        return render(request, 'store/login.html')
+
+    def post(self, request):
+        username = request.POST['username']
+        password = request.POST['password']
+
+        user = authenticate(request, username=username, password=password)
+        if user:
+            login(request, user)
+            return redirect('product-list')  # or your homepage
+        else:
+            messages.error(request, "Invalid credentials")
+            return redirect('login')
+
+from django.contrib.auth import logout
+
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect('login')  # Redirect to login or homepage

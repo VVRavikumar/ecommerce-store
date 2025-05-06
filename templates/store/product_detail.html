@@ -61,13 +61,20 @@
         <p class="price">₹{{ product.price }}</p>
         <p>{{ product.description }}</p>
 
-        <form method="POST" action="{% url 'add-to-cart' %}">
-            {% csrf_token %}
-            <input type="hidden" name="product_id" value="{{ product.id }}">
-            <label>Quantity:</label>
-            <input type="number" name="quantity" value="1" min="1">
-            <button type="submit">Add to Cart</button>
-        </form>
+        {% if user.is_authenticated %}
+            <form method="POST" action="{% url 'add-to-cart' %}">
+                {% csrf_token %}
+                <input type="hidden" name="product_id" value="{{ product.id }}">
+                <label>Quantity:</label>
+                <input type="number" name="quantity" value="1" min="1">
+                <button type="submit">Add to Cart</button>
+            </form>
+        {% else %}
+            <p><strong>Please login to add items to cart.</strong></p>
+            <a href="{% url 'login' %}"><button>Sign In</button></a>
+            <a href="{% url 'signup' %}"><button>Sign Up</button></a>
+        {% endif %}
+
     </div>
 </div>
 

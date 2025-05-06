@@ -4,43 +4,142 @@
 <head>
     <title>Shop</title>
     <style>
-        body { font-family: Arial; }
-        .products { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
-        .card { width: 220px; padding: 10px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 2px 2px 6px #ddd; text-align: center; }
-        .card img { width: 100%; height: 180px; object-fit: cover; border-radius: 10px; }
-        .pagination { margin: 20px; text-align: center; }
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 0 15px;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background-color: #f2f2f2;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 2px 2px 6px #ddd;
+            text-align: center;
+            background-color: white;
+        }
+
+        .card img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .pagination {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .button-info {
+            background: #28a745;
+            border: none;
+            padding: 10px 20px;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+
+        form {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        input[type="text"], input[type="number"] {
+            padding: 8px;
+            margin: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button[type="submit"] {
+            padding: 8px 15px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
-    <h1 style="text-align:center;">Product Catalog</h1>
-
-    <form method="get" style="text-align:center; margin-bottom: 20px;">
-        <input type="text" name="q" placeholder="Search products" value="{{ request.GET.q }}">
-        <input type="number" name="min_price" placeholder="Min price" value="{{ request.GET.min_price }}">
-        <input type="number" name="max_price" placeholder="Max price" value="{{ request.GET.max_price }}">
-        <button type="submit">Filter</button>
-    </form>
-
-    <div class="products">
-        {% for product in products %}
-        <div class="card">
-            <img src="{{ product.image.url }}" alt="{{ product.name }}">
-            <h3><a href="{% url 'product-detail' product.id %}">View Details</a></h3>
-            <p>₹{{ product.price }}</p>
+    <div class="container">
+        <div class="header">
+            {% if user.is_authenticated %}
+                <div>Welcome, {{ user.username }}</div>
+                <a href="{% url 'logout' %}" class="button-info">Logout</a>
+            {% else %}
+                <div></div>
+                <div>
+                    <a href="{% url 'login' %}" class="button-info">Login</a>
+                    <a href="{% url 'signup' %}" class="button-info">Sign Up</a>
+                </div>
+            {% endif %}
         </div>
-        {% endfor %}
-    </div>
 
-    <div class="pagination">
-        {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}">&laquo; Prev</a>
-        {% endif %}
+        <h1>Product Catalog</h1>
 
-        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        <form method="get">
+            <input type="text" name="q" placeholder="Search products" value="{{ request.GET.q }}">
+            <input type="number" name="min_price" placeholder="Min price" value="{{ request.GET.min_price }}">
+            <input type="number" name="max_price" placeholder="Max price" value="{{ request.GET.max_price }}">
+            <button type="submit">Filter</button>
+        </form>
 
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">Next &raquo;</a>
-        {% endif %}
+        <div class="products">
+            {% for product in products %}
+            <div class="card">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                <h3><a href="{% url 'product-detail' product.id %}">View Details</a></h3>
+                <p>₹{{ product.price }}</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">&laquo; Prev</a>
+            {% endif %}
+
+            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Next &raquo;</a>
+            {% endif %}
+        </div>
     </div>
 </body>
 </html>

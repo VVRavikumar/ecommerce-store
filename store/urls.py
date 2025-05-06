@@ -30,4 +30,7 @@ urlpatterns=[
     path('login/', views.user_login, name='login'),
     path('checkout/', views.CheckoutView.as_view(), name='checkout'),
     path('order-success/', views.OrderSuccessView.as_view(), name='order-success'),
+    path('login/', views.LoginView.as_view(), name='login'),
+    path('signup/', views.SignUpView.as_view(), name='signup'),
+    path('logout/', views.LogoutView.as_view(), name='logout'),
 ]
