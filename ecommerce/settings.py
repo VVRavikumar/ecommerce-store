@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-+)flbt)x(et15gtxt^t#7qij8entpb1mvlv3p%7cyv4y2omm_3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['CartCrazy.com', 'www.CartCrazy.com']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -119,7 +119,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
-
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
